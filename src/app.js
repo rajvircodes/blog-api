@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const userRoutes = require("./routes/user.routes");
-
 const morgan = require("morgan");
 
 app.use(express.json());
@@ -14,5 +13,6 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/", userRoutes);
+app.use("/api/v1/auth", userRoutes);
+
 module.exports = app;
