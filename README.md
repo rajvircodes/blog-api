@@ -30,3 +30,10 @@ MONGO_URI
 JWT_SECRET
 JWT_EXPIRES_IN
 ```
+| <u>Method</u> | <u>Endpoint</u> | <u>Protected?</u> | <u>Purpose</u> |
+| ----- | ----- | ----- | ----- |
+| POST | `/api/v1/posts`  | Yes | Create post |
+| GET | `/api/v1/posts`  | No | List all posts |
+| GET | `/api/v1/posts/:id`  | No | Single post |
+| PUT | `/api/v1/posts/:id`  | Yes (owner) | Edit post |
+| DELETE | `/api/v1/posts/:id`  | Yes (owner) | Delete post |
