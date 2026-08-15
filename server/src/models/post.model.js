@@ -4,11 +4,11 @@ const postSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Title is required"],
     },
     content: {
       type: String,
-      required: true,
+      required: [true, "content is required"],
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
