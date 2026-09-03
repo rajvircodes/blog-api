@@ -3,6 +3,7 @@ const { query, validationResult, matchedData } = require("express-validator");
 const app = express();
 const userRoutes = require("./routes/user.routes");
 const postRoutes = require("./routes/post.routes");
+const categoryRoutes = require("./routes/category.routes");
 const morgan = require("morgan");
 const cors = require("cors");
 
@@ -33,5 +34,6 @@ app.get("/hello", query("person").notEmpty().escape(), (req, res) => {
 
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/posts", postRoutes);
+app.use("/api/v1/categories", categoryRoutes);
 
 module.exports = app;
