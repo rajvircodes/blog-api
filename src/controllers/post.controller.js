@@ -25,17 +25,17 @@ const getAllPosts = async (req, res) => {
 // access   Private
 const createPost = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content } = req.body || {};
 
-    if (!title || !content) {
+    if (typeof title !== "string" || typeof content !== "string" || !title.trim() || !content.trim()) {
       return res
         .status(400)
         .json({ success: false, message: "Please provide title and content" });
     }
 
     const post = await Post.create({
-      title,
-      content,
+      title: title.trim(),
+      content: content.trim(),
       author: req.user.id,
     });
 
@@ -75,6 +75,10 @@ const getPostById = async (req, res) => {
   } catch (error) {
     console.log("Get post error:", error.message);
 
+    if (error.name === "CastError") {
+      return res.status(400).json({ success: false, message: "Invalid post ID" });
+    }
+
     return res.status(500).json({
       success: false,
       message: "Server error while fetching post",
@@ -88,9 +92,17 @@ const getPostById = async (req, res) => {
 const updatePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content } = req.body;
+    const { title, content } = req.body || {};
 
-    const post = await Post.findByIdAndUpdate(id);
+    if (title !== undefined && (typeof title !== "string" || !title.trim())) {
+      return res.status(400).json({ success: false, message: "Title cannot be empty" });
+    }
+
+    if (content !== undefined && (typeof content !== "string" || !content.trim())) {
+      return res.status(400).json({ success: false, message: "Content cannot be empty" });
+    }
+
+    const post = await Post.findById(id);
 
     if (!post) {
       return res
@@ -105,8 +117,8 @@ const updatePost = async (req, res) => {
       });
     }
 
-    post.title = title || post.title;
-    post.content = content || post.content;
+    if (title !== undefined) post.title = title.trim();
+    if (content !== undefined) post.content = content.trim();
 
     const updatedPost = await post.save();
 
@@ -117,6 +129,10 @@ const updatePost = async (req, res) => {
     });
   } catch (error) {
     console.log("Update post error:", error.message);
+
+    if (error.name === "CastError") {
+      return res.status(400).json({ success: false, message: "Invalid post ID" });
+    }
 
     return res
       .status(500)
@@ -131,7 +147,7 @@ const deletePost = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const post = await Post.findByIdAndDelete(id);
+    const post = await Post.findById(id);
 
     if (!post) {
       return res
@@ -153,6 +169,10 @@ const deletePost = async (req, res) => {
       .json({ success: true, message: "Post deleted successfully" });
   } catch (error) {
     console.log("Delete post error", error.message);
+
+    if (error.name === "CastError") {
+      return res.status(400).json({ success: false, message: "Invalid post ID" });
+    }
 
     return res.status(500).json({ success: false, message: "Server error" });
   }

@@ -30,7 +30,7 @@ const createCategory = async (req, res) => {
   try {
     const { name } = req.body || {};
 
-    if (!name || !name.trim()) {
+    if (typeof name !== "string" || !name.trim()) {
       return res.status(400).json({
         success: false,
         message: "Category name is required",
@@ -92,7 +92,7 @@ const updateCategory = async (req, res) => {
   try {
     const { name } = req.body || {};
 
-    if (!name || !name.trim()) {
+    if (typeof name !== "string" || !name.trim()) {
       return res.status(400).json({
         success: false,
         message: "Category name is required",
